@@ -54,16 +54,21 @@ function ClassifyProfile(type){
         console.log('Displaying RAW LS:likes: ' + JSON.parse(localStorage.getItem('likes')));
         console.log('Length of $likes after fetching from localstorage: ' + likes.length);
     }
-    likes.push('aids');
+    likes.push(currentProfile); //TODO Replace 'aids' with clicked profile
+    //Stringifying and storing array $likes to localStorage
     localStorage.setItem('likes', JSON.stringify(likes));
     DisplayLikesDislikes();
     nextProfile();
 }
 
 function DisplayLikesDislikes(){
+    //Create $likes and set to de-stringified localstorage string likes
     let likes = JSON.parse(localStorage.getItem('likes'));
+    //Loop through $likes and display
+    document.querySelector('.likes-container').innerHTML = '';
     for(i=0; i<likes.length;i++){
-        document.querySelector('.likes-container').innerHTML += '<h1 class="switchlist" id="' + i + '">' + currentProfile.name.first + ' ' + currentProfile.name.last + '</h1>';
+        console.log('DLD(): ' + likes[i].name.first);
+        document.querySelector('.likes-container').innerHTML += '<h1 class="switchlist" id="' + i + '">' + likes[i].name.first + ' ' + likes[i].name.last + '</h1>';
     }
 }
 
