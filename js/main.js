@@ -49,10 +49,7 @@ function ClassifyProfile(type){
     let likes = new Array();
     //De-stringifying liked profiles-array from localStorage except first like
     if(localStorage.getItem('likes') != null){
-        console.log('Length of $likes after making it: ' + likes.length);
         likes = JSON.parse(localStorage.getItem('likes'));
-        console.log('Displaying RAW LS:likes: ' + JSON.parse(localStorage.getItem('likes')));
-        console.log('Length of $likes after fetching from localstorage: ' + likes.length);
     }
     likes.push(currentProfile); //TODO Replace 'aids' with clicked profile
     //Stringifying and storing array $likes to localStorage
@@ -67,7 +64,6 @@ function DisplayLikesDislikes(){
     //Loop through $likes and display
     document.querySelector('.likes-container').innerHTML = '';
     for(i=0; i<likes.length;i++){
-        console.log('DLD(): ' + likes[i].name.first);
         document.querySelector('.likes-container').innerHTML += '<h1 class="switchlist" id="' + i + '">' + likes[i].name.first + ' ' + likes[i].name.last + '</h1>';
     }
 }
