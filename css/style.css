@@ -27,3 +27,19 @@ body {
     height: 30vw;
     background-size: cover;
 }
+
+.like {
+    width:50%;
+    float:left;
+    text-align:center;
+    font-size: 6vw;
+    color: #2ecc71;
+}
+
+.dislike {
+    width:50%;
+    float:left;
+    text-align:center;
+    font-size: 6vw;
+    color: #f03434;
+}
