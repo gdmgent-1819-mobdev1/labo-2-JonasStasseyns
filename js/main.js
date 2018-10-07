@@ -20,7 +20,7 @@ document.querySelector('.dislike').addEventListener('click', function(){
     ClassifyProfile('dislike');
 });
 
-let index=0;
+let index = 0;
 let currentProfile = '';
 let displayLDindex = 0;
 
