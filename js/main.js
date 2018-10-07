@@ -8,6 +8,7 @@
         //+ store stringified array of 10 profiles in localstorage
         localStorage.setItem('test', JSON.stringify(myJson));
         nextProfile();
+        DisplayLikesDislikes(true);
       });
 }
 
@@ -51,21 +52,30 @@ function ClassifyProfile(type){
     if(localStorage.getItem('likes') != null){
         likes = JSON.parse(localStorage.getItem('likes'));
     }
-    likes.push(currentProfile); //TODO Replace 'aids' with clicked profile
+    likes.push(currentProfile);
     //Stringifying and storing array $likes to localStorage
     localStorage.setItem('likes', JSON.stringify(likes));
     DisplayLikesDislikes();
     nextProfile();
 }
 
-function DisplayLikesDislikes(){
+function DisplayLikesDislikes(init){
     //Create $likes and set to de-stringified localstorage string likes
     let likes = JSON.parse(localStorage.getItem('likes'));
     //Loop through $likes and display
     document.querySelector('.likes-container').innerHTML = '';
-    for(i=0; i<likes.length;i++){
-        document.querySelector('.likes-container').innerHTML += '<h1 class="switchlist" id="' + i + '">' + likes[i].name.first + ' ' + likes[i].name.last + '</h1>';
+    if(likes != null){
+        for(i=0; i<likes.length;i++){
+        document.querySelector('.likes-container').innerHTML += '<button class="switchlist" id="likes_' + likes[i].login.uuid + '">' + likes[i].name.first + ' ' + likes[i].name.last + '</h3>';
+        document.querySelector('#likes_' + likes[i].login.uuid).addEventListener('click', function(){
+            SwitchList(event.target.getAttribute('id'));
+        });
     }
+    }
+}
+
+function SwitchList(uuid){
+    console.log(uuid);
 }
 
 fetchData();
