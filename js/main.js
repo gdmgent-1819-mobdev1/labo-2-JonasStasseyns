@@ -5,12 +5,18 @@
         return response.json();
       })
       .then(function(myJson) {
-        //+ store stringified array of 10 profiles in localstorage
-        localStorage.setItem('test', JSON.stringify(myJson));
-        nextProfile();
-        DisplayLikesDislikes(true);
-      });
-}
+        let tmpLikes = localStorage.getItem('likes');
+        let tmpDislikes = localStorage.getItem('dislikes');
+        for(let i=0;i<myJson.length;i++){
+            if(!tmpLikes.includes(myJson.results[i].login.uuid) || !tmpDislikes.includes(myJson.results[i].login.uuid)){
+                //store stringified array of 10 profiles in localstorage
+                localStorage.setItem('test', JSON.stringify(myJson));
+                nextProfile();
+                DisplayLikesDislikes(true);
+            }   
+        
+      };
+})}
 
 document.querySelector('.like').addEventListener('click', function(){
     ClassifyProfile('like');
