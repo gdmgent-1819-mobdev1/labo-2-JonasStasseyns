@@ -1,21 +1,21 @@
-    function fetchData(){
-    //HTML5 Fetch
-    fetch('https://randomuser.me/api?results=10')
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(myJson) {
-        let tmpLikes = localStorage.getItem('likes');
-        let tmpDislikes = localStorage.getItem('dislikes');
-        for(let i=0;i<myJson.length;i++){
-            if(!tmpLikes.includes(myJson.results[i].login.uuid) || !tmpDislikes.includes(myJson.results[i].login.uuid)){
-                //store stringified array of 10 profiles in localstorage
-                localStorage.setItem('test', JSON.stringify(myJson));
-                nextProfile();
-                DisplayLikesDislikes(true);
-            }   
-        
-      };
+function fetchData(){
+//HTML5 Fetch
+fetch('https://randomuser.me/api?results=10')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    let tmpLikes = localStorage.getItem('likes');
+    let tmpDislikes = localStorage.getItem('dislikes');
+    let clear = true;
+    for(let i=0;i<myJson.length;i++){
+        if(tmpLikes.includes(myJson.results[i].login.uuid) || tmpDislikes.includes(myJson.results[i].login.uuid)){
+            clear = false;
+        }else{
+            clear = true;
+        }
+
+  };
 })}
 
 document.querySelector('.like').addEventListener('click', function(){
