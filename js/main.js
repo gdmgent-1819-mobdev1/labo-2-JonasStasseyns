@@ -1,28 +1,40 @@
-function fetchData(){
-//HTML5 Fetch
-fetch('https://randomuser.me/api?results=10')
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(myJson) {
-    let tmpLikes = localStorage.getItem('likes');
-    let tmpDislikes = localStorage.getItem('dislikes');
+function fetchData() {
+    //HTML5 Fetch
+    fetch('https://randomuser.me/api?results=10')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (myJson) {
+            localStorage.setItem('fetched-profiles', JSON.stringify(myJson));
+            validateFetch();
+        })
+}
+
+function validateFetch() {
+    let fetchedArray = JSON.parse(localStorage.getItem('fetched-profiles'));
+    let likeArray = JSON.parse(localStorage.getItem('likes'));
+    let dislikeArray = JSON.parse(localStorage.getItem('dislikes'));
     let clear = true;
-    for(let i=0;i<myJson.length;i++){
-        if(tmpLikes.includes(myJson.results[i].login.uuid) || tmpDislikes.includes(myJson.results[i].login.uuid)){
+    for (let i = 0; i < fetchedArray.length; i++) {
+        if (likeArray.includes(fetchedArray.results[i].login.uuid) || dislikeArray.includes(fetchedArray.results[i].login.uuid)) {
+            break;
             clear = false;
-        }else{
-            clear = true;
+            console.log('duplicate found');
+            localStorage.removeItem('fetched-profiles');
+            fetchData();
         }
+    }
+    if (clear) {
+        nextProfile();
+        DisplayLikesDislikes(true);
+    }
+}
 
-  };
-})}
-
-document.querySelector('.like').addEventListener('click', function(){
+document.querySelector('.like').addEventListener('click', function () {
     ClassifyProfile('like');
-    
+
 });
-document.querySelector('.dislike').addEventListener('click', function(){
+document.querySelector('.dislike').addEventListener('click', function () {
     ClassifyProfile('dislike');
 });
 
@@ -30,22 +42,22 @@ let index = 0;
 let currentProfile = '';
 let displayLDindex = 0;
 
-function nextProfile(){
+function nextProfile() {
     //De-stringify array from localStorage
-    let array = JSON.parse(localStorage.getItem('test'));
+    let array = JSON.parse(localStorage.getItem('fetched-profiles'));
     //store profile from array with current $index in $currentprofile
     currentProfile = array.results[index];
     displayProfile(currentProfile);
     //Update $index and re-execute fetchData() if>=9
-    if(index>=9){
-        index=0;
+    if (index >= 9) {
+        index = 0;
         fetchData();
-    }else{
+    } else {
         index++;
     }
 }
 
-function displayProfile(hooman){
+function displayProfile(hooman) {
     //Generating elements
     document.querySelector('.data-container').innerHTML = '';
     document.querySelector('.data-container').innerHTML += '<h1>' + hooman.name.first + ' ' + hooman.name.last + '</h1>';
@@ -56,11 +68,11 @@ function displayProfile(hooman){
     document.querySelector('.data-container').innerHTML += '<h3>' + hooman.location.city + '</h3>';
 }
 
-function ClassifyProfile(type){
-    if(type=='like'){
+function ClassifyProfile(type) {
+    if (type == 'like') {
         let likes = new Array();
         //De-stringifying liked profiles-array from localStorage except first like
-        if(localStorage.getItem('likes') != null){
+        if (localStorage.getItem('likes') != null) {
             likes = JSON.parse(localStorage.getItem('likes'));
         }
         likes.push(currentProfile);
@@ -68,10 +80,10 @@ function ClassifyProfile(type){
         localStorage.setItem('likes', JSON.stringify(likes));
         DisplayLikesDislikes();
         nextProfile();
-    }else if(type=='dislike'){
+    } else if (type == 'dislike') {
         let dislikes = new Array();
         //De-stringifying disliked profiles-array from localStorage except first dislike
-        if(localStorage.getItem('dislikes') != null){
+        if (localStorage.getItem('dislikes') != null) {
             dislikes = JSON.parse(localStorage.getItem('dislikes'));
         }
         dislikes.push(currentProfile);
@@ -82,18 +94,18 @@ function ClassifyProfile(type){
     }
 }
 
-function DisplayLikesDislikes(init){
+function DisplayLikesDislikes(init) {
     //Create $likes and set to de-stringified localstorage string likes
     let likes = JSON.parse(localStorage.getItem('likes'));
     //Loop through $likes and display
     document.querySelector('.likes-container').innerHTML = '';
-    if(likes != null){
-        for(i=0; i<likes.length;i++){
-        document.querySelector('.likes-container').innerHTML += '<h3 class="switchlist" id="l' + i + '">' + likes[i].name.first + ' ' + likes[i].name.last + '</h3>';
+    if (likes != null) {
+        for (i = 0; i < likes.length; i++) {
+            document.querySelector('.likes-container').innerHTML += '<h3 class="switchlist" id="l' + i + '">' + likes[i].name.first + ' ' + likes[i].name.last + '</h3>';
         }
-        for(a=0;a<likes.length;a++){
+        for (a = 0; a < likes.length; a++) {
             displayLDindex = a;
-            document.querySelector('#l' + a).addEventListener('click', function(){
+            document.querySelector('#l' + a).addEventListener('click', function () {
                 SwitchList(event.target.getAttribute('id').substr(1), 'likes');
             });
         }
@@ -102,28 +114,28 @@ function DisplayLikesDislikes(init){
     let dislikes = JSON.parse(localStorage.getItem('dislikes'));
     //Loop through $dislikes and display
     document.querySelector('.dislikes-container').innerHTML = '';
-    if(dislikes != null){
-        for(i=0; i<dislikes.length;i++){
-        document.querySelector('.dislikes-container').innerHTML += '<h3 class="switchlist" id="d' + i + '">' + dislikes[i].name.first + ' ' + dislikes[i].name.last + '</h3>';
+    if (dislikes != null) {
+        for (i = 0; i < dislikes.length; i++) {
+            document.querySelector('.dislikes-container').innerHTML += '<h3 class="switchlist" id="d' + i + '">' + dislikes[i].name.first + ' ' + dislikes[i].name.last + '</h3>';
         }
-        for(a=0;a<dislikes.length;a++){
+        for (a = 0; a < dislikes.length; a++) {
             displayLDindex = a;
-            document.querySelector('#d' + a).addEventListener('click', function(){
+            document.querySelector('#d' + a).addEventListener('click', function () {
                 SwitchList(event.target.getAttribute('id').substr(1), 'dislikes');
             });
         }
     }
 }
 
-function SwitchList(index, type){
+function SwitchList(index, type) {
     let likes = JSON.parse(localStorage.getItem('likes'));
     let dislikes = JSON.parse(localStorage.getItem('dislikes'));
     console.log(index);
     console.log(likes[index]);
-    if(type=='likes'){
+    if (type == 'likes') {
         dislikes.push(likes[index]);
         likes.splice(index, 1);
-    }else{
+    } else {
         likes.push(dislikes[index]);
         dislikes.splice(index, 1);
     }
